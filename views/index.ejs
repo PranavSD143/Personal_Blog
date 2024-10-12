@@ -14,7 +14,19 @@
 
   <body>
     <%- include('./partials/header.ejs') %>
-    <div class="index-image"></div>
+    <div
+      class="index-image"
+      style="background-image: url('./images/image1.jpg')">
+      <div id="img-overlay-style">
+        <div>
+          "Technology is the canvas on which we paint our future. With every
+          line of code, we create new possibilities, reshaping the world and
+          empowering individuals to chase their dreams."<br />
+          "We need diversity of thought in the world to face the new
+          challenges." ~ Tim Berners-Lee
+        </div>
+      </div>
+    </div>
     <%-include("./partials/footer.ejs")%>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
