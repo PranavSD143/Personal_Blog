@@ -11,10 +11,11 @@
       crossorigin="anonymous" />
     <title>GPU Blog</title>
   </head>
+
   <body>
     <%-include("./partials/header.ejs")%>
     <div id="main-add-post">
-      <form action="submit">
+      <form>
         <div class="add-post">
           <div class="dropdown">
             <button
@@ -27,40 +28,50 @@
               Category
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a
-                class="dropdown-item"
-                href="#"
-                onclick="selectCategory('Gen AI')"
+              <a class="dropdown-item" onclick="selectCategory('Gen AI')"
                 >Gen AI</a
               >
-              <a
-                class="dropdown-item"
-                href="#"
-                onclick="selectCategory('Gaming')"
+              <a class="dropdown-item" onclick="selectCategory('Gaming')"
                 >Gaming</a
               >
-              <a
-                class="dropdown-item"
-                href="#"
-                onclick="selectCategory('Productivity')"
+              <a class="dropdown-item" onclick="selectCategory('Productivity')"
                 >Productivity</a
               >
             </div>
           </div>
 
           <div>
-            <label class="post-labels">Link:</label>
-            <input type="url" class="post-text" style="width: 300px" />
+            <label class="post-labels">Title:</label>
+            <input
+              type="text"
+              class="post-text"
+              style="width: 300px"
+              id="post-title" />
           </div>
           <div>
             <label class="post-labels">Post:</label
             ><textarea
               class="post-text"
               id="post-content"
-              minlength="10"></textarea>
+              minlength="10"
+              maxlength="50"></textarea>
           </div>
           <div style="display: flex; gap: 20px">
-            <button type="submit" class="submit-reset-button">
+            <button
+              type="submit"
+              class="submit-reset-button"
+              onclick="
+              event.preventDefault();
+              const category =document.getElementById('dropdownMenuButton').textContent;
+              const postTitle = document.getElementById('post-title').value;
+              const postContent = document.getElementById('post-content').value;
+              if(!postTitle||!postContent ||category == '\n              Category\n            '){ alert('Please enter shit.'); return;}
+              fetch('/submit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({category,postTitle, postContent})
+              });
+              ">
               Confirm Post
             </button>
             <button
@@ -68,6 +79,13 @@
               class="submit-reset-button"
               style="width: 100px">
               Reset
+            </button>
+            <button
+              type="button"
+              class="submit-reset-button"
+              id="close-button"
+              onclick="goBack()">
+              Close
             </button>
           </div>
         </div>
@@ -78,6 +96,13 @@
       function selectCategory(category) {
         // Update the dropdown button text with the selected category
         document.getElementById("dropdownMenuButton").textContent = category;
+      }
+      function goBack() {
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          window.location.href = "/fallback-url"; // Redirect to a fallback URL if no history
+        }
       }
     </script>
 

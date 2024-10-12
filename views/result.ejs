@@ -14,9 +14,14 @@
 
   <body>
     <%- include('./partials/header.ejs') %>
-    <div class="post-container">
-      <% if(locals.posts) { %> <% for(let i=0; i < posts.length; i++) { %>
-      <div><%= posts[i] %></div>
+    <div class="parent-post-container">
+      <% if(locals.posts && posts.length!=0) { %> <% for(let i=0; i <
+      posts.length; i++) { %>
+      <div class="post-container">
+        <a href="<%-posts[i].url%>" style="text-decoration: none"
+          ><div class="post-content"><%-posts[i].title%></div>
+        </a>
+      </div>
       <% } %> <%} else{%>
       <div id="post-alternative">
         It's a ghost town 👻—no posts to see here! But keep scrolling! ⏳✨

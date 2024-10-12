@@ -1,27 +1,24 @@
 import express from "express";
-
+import bodyParser from "body-parser";
 const app=express();
 const port =3000;
-
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.static("public"));
 let blog_posts={
-  gen_ai:
+  "Gen AI":
   {
-    "What is Gen AI":"https://www.gartner.com//en//topics//generative-ai#q1",
-    "Benefits of Generative AI":"https://www.gartner.com//en//topics//generative-ai#q3",
-    "Risks of Gen AI":"https://www.gartner.com//en//topics//generative-ai#q4",
-    "Industries impacted by Gen AI":"https://www.gartner.com/en/topics/generative-ai#q7"
   }
   ,
-  gaming:{
-    "AI in gaming":"https://www.engati.com//blog//ai-for-gaming#toc-what-is-ai-for-gaming-",
-    "AI integrated with NPC's":"https://appinventiv.com//blog//ai-in-gaming//#tab3"
+  "Gaming":{
   }
   ,
-  productivity:{
-
+  "Productivity":{
   }
 
 };
+
 
 function arrayConversion(blog_posts,category){
   let posts=[];
@@ -33,7 +30,7 @@ function arrayConversion(blog_posts,category){
   return posts;
 
 }
-app.use(express.static("public"));
+
 app.listen(port,()=>{
   console.log("Listening on port "+port);
 });
@@ -43,20 +40,29 @@ app.get("/",(req,res)=>{
 });
 
 app.get("/gen_ai",(req,res)=>{
-  let posts = arrayConversion(blog_posts,"gen_ai");
+  let posts = arrayConversion(blog_posts,"Gen AI");
   res.render("result.ejs",{posts});
 });
 
 app.get("/gaming",(req,res)=>{
-  let posts = arrayConversion(blog_posts,"gaming");
+  let posts = arrayConversion(blog_posts,"Gaming");
   res.render("result.ejs",{posts});
 });
 
 app.get("/productivity",(req,res)=>{
-  let posts = arrayConversion(blog_posts,"productivity");
+  let posts = arrayConversion(blog_posts,"Productivity");
   res.render("result.ejs",{posts});
 });
 
 app.get("/add-post",(req,res)=>{
   res.render("add-post.ejs");
 })
+
+app.post("/submit",(req,res)=>{
+  if(!req.body) return;
+  let post_content=req.body;
+  let category=post_content.category;
+  let postTitle=post_content.postTitle;
+  blog_posts[category][postTitle]=post_content['postContent'];
+  console.log(blog_posts);
+});
