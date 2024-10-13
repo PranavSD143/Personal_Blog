@@ -14,13 +14,14 @@
 
   <body>
     <%- include('./partials/header.ejs') %>
+    <%if(locals.obj){%><h1 style="text-align: center;"><%=obj[1] %><%}%>&nbsp;Posts</h1>
     <div class="parent-post-container">
-      <% if(locals.posts && posts.length!=0) { %> <% for(let i=0; i <
-      posts.length; i++) { %>
+      <% if(locals.obj[0] && obj[0].length!=0) { %> <% for(let i=0; i <
+      obj[0].length; i++) {  %>
       <div class="post-container">
-        <a href="<%-posts[i].url%>" style="text-decoration: none"
-          ><div class="post-content"><%-posts[i].title%></div>
-        </a>
+        <p style="text-decoration: none"
+          ><div class="post-content"><%-obj[0][i]['title']%></div>
+        </>
       </div>
       <% } %> <%} else{%>
       <div id="post-alternative">
@@ -30,4 +31,27 @@
     </div>
     <%- include("./partials/footer.ejs") %>
   </body>
+  <script>
+      function linkerFn() {
+        if(document.getElementById("post-alternative")) return;
+        else {
+          const linkers = document.querySelectorAll(".post-content");
+          for(let linker of linkers) {
+            linker.addEventListener("click", () => {
+              fetch("/display-post", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({"title": linker.textContent,"category":document.querySelector("h1").textContent})
+              }).then(response => response.text())
+                .then(html => {
+                    document.body.innerHTML = html;
+                })
+                .catch(error => console.error('Error fetching new page:', error));
+            });
+          }
+        }
+      }
+      linkerFn();
+      
+    </script>
 </html>

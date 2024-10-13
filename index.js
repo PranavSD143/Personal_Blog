@@ -22,10 +22,11 @@ let blog_posts={
 
 function arrayConversion(blog_posts,category){
   let posts=[];
-  for(var content in blog_posts[category])
+  let titles = Object.keys(blog_posts[category]);
+  for(const title of titles)
   {
-    let url = blog_posts[category][content];
-    posts.push({title:content,url:url});
+    let postDetails=blog_posts[category][title];
+    posts.push({'title':title,'postDetails': postDetails});
   }
   return posts;
 
@@ -41,17 +42,26 @@ app.get("/",(req,res)=>{
 
 app.get("/gen_ai",(req,res)=>{
   let posts = arrayConversion(blog_posts,"Gen AI");
-  res.render("result.ejs",{posts});
+  let obj=[
+    posts,
+    "Gen AI"];
+  res.render("result.ejs",{obj});
 });
 
 app.get("/gaming",(req,res)=>{
   let posts = arrayConversion(blog_posts,"Gaming");
-  res.render("result.ejs",{posts});
+  let obj=[
+    posts,
+    "Gaming"];
+  res.render("result.ejs",{obj});
 });
 
 app.get("/productivity",(req,res)=>{
   let posts = arrayConversion(blog_posts,"Productivity");
-  res.render("result.ejs",{posts});
+  let obj=[
+    posts,
+    "Productivity"];
+  res.render("result.ejs",{obj});
 });
 
 app.get("/add-post",(req,res)=>{
@@ -64,5 +74,15 @@ app.post("/submit",(req,res)=>{
   let category=post_content.category;
   let postTitle=post_content.postTitle;
   blog_posts[category][postTitle]=post_content['postContent'];
-  console.log(blog_posts);
 });
+
+app.post("/display-post",(req,res)=>{
+  const postTitle = req.body['title'];
+  const Category = req.body['category'];
+  const postCategory = Category.slice(0, Category.length-6);
+  const postContent = blog_posts[postCategory][postTitle];
+  const obj = [postTitle, postContent];
+  res.render("post.ejs", {obj});
+})
+
+app.post()
