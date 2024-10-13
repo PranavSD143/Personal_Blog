@@ -68,12 +68,19 @@ app.get("/add-post",(req,res)=>{
   res.render("add-post.ejs");
 })
 
-app.post("/submit",(req,res)=>{
-  if(!req.body) return;
-  let post_content=req.body;
-  let category=post_content.category;
-  let postTitle=post_content.postTitle;
-  blog_posts[category][postTitle]=post_content['postContent'];
+app.post("/submit", (req, res) => {
+  console.log(req.body);  // Log the request to ensure data is being received correctly
+  if (!req.body) return;
+  let post_content = req.body;
+  let category = post_content.category;
+  let postTitle = post_content.postTitle;
+  blog_posts[category][postTitle] = post_content["postContent"];
+  
+  let posts = arrayConversion(blog_posts, category);
+  let obj = [posts, category];
+  
+  // Render the result page with the posts object based on the category
+  res.render("result.ejs", { obj });
 });
 
 app.post("/display-post",(req,res)=>{
@@ -82,7 +89,5 @@ app.post("/display-post",(req,res)=>{
   const postCategory = Category.slice(0, Category.length-6);
   const postContent = blog_posts[postCategory][postTitle];
   const obj = [postTitle, postContent];
-  res.render("post.ejs", {obj});
-})
-
-app.post()
+  res.redirect("/");
+});

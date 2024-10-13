@@ -238,6 +238,11 @@ li:hover{
 }
 
 
+#post-text{
+  font-family: 'Roboto';
+  font-size: 2rem;
+}
+
 *{
   font-family: 'Roboto';
 }
